@@ -38,6 +38,15 @@ to database models and storage.
 The architecture will be similar to a similar MVC design, responding to
 events cause by http requests - GET, POST, PUT, DELETE.
 
+### Requirements
+
+Code was developed using:
+- php 8.1.4
+
+This is using features that are only available after 8.1, e.g., `enum`, this will mean
+that this will require this php version or it will no work. Only took warning after having
+things mostly ready and I looked forward for using this.
+
 ### Code organization
 
 Organizing code is important because allows the developer to easily guess

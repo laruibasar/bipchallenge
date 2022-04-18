@@ -21,7 +21,7 @@ App::setup();
 $request = new Request();
 
 /*
- * Process request according with the routing information
+ * Process request according to the routing information
  */
 try {
     $response = Router::route($request);
