@@ -5,6 +5,7 @@ require_once 'autoload.php';
 
 use Core\App;
 use Core\Http\HttpResponse;
+use Core\Http\HttpMethodException;
 use Core\Http\JsonResponse;
 use Core\Http\Request;
 use Core\Route\Router;
@@ -18,7 +19,13 @@ App::setup();
 /*
  * Build a request with information from server
  */
-$request = new Request();
+try {
+    $request = new Request();
+} catch (HttpMethodException $hmex) {
+    $error = (object)['error' => $hmex->getMessage()];
+    echo new JsonResponse($error, HttpResponse::HTTP_NOT_IMPLEMENTED);
+    die;
+}
 
 /*
  * Process request according to the routing information

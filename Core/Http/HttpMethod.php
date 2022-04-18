@@ -9,13 +9,20 @@ enum HttpMethod
    case PUT;
    case DELETE;
 
-   public static function getMethod(string $method): HttpMethod
+    /**
+     * Get the object representing the HTTP Request type
+     * @param string $method
+     * @return HttpMethod|null
+     * @throws HttpMethodException
+     */
+   public static function getMethod(string $method): ?HttpMethod
    {
        return match ($method) {
            'GET' => HttpMethod::GET,
            'POST' => HttpMethod::POST,
            'PUT' => HttpMethod::PUT,
-           'DELETE' => HttpMethod::DELETE
+           'DELETE' => HttpMethod::DELETE,
+           default => throw new HttpMethodException("HTTP Method $method not handled"),
        };
    }
 }
