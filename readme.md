@@ -11,7 +11,7 @@ to the request.
 
 Use an easy CRUD service to operate on data on the file.
 
-## Rules
+### Rules
 
 * You __may not__ use any external library or framework
  __except from the ones used to Unit Test the solution__.
@@ -27,4 +27,35 @@ Use an easy CRUD service to operate on data on the file.
 
 Cover the code with Unit Tests or even better, build it using a TDD approach.
 
+## Solution
 
+The approach to solve this challenge will take a major overall of the
+provided script, using a complete change into using OOP paradigm, with
+autoloading to make all classes available to provide all features of
+a web application, from http objects representing requests and responses,
+to database models and storage.
+
+The architecture will be similar to a similar MVC design, responding to
+events cause by http requests - GET, POST, PUT, DELETE.
+
+### Code organization
+
+Organizing code is important because allows the developer to easily guess
+where some piece of the application might be place, as the application
+grows.
+
+```
+- autoload.php - autoload classes for the application 
+- index.php - application entry point
+- Config.php - application configuration and setup
+- Controller - controllers to make the interaction between components
+  \ Controller.php
+- Core - application general-use classes 
+   \ Http - classes related to http requests and http responses
+  |
+   \ File - file operations
+  |
+   \ Database - layer to abstract CRUD operations between model and real data models
+- Model - data object representation 
+   \ Turbine.php
+```
