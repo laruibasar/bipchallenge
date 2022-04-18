@@ -9,45 +9,29 @@ use Model\Turbine;
 
 class AddressController extends Controller
 {
-    protected $addresses = [];
-
     function ex(Request $request)
     {
         $response = (object)['error' => ''];
-        $this->rcd();
-        $id = $request->getParam('id');
-        if (count($this->addresses) < (int)$id) {
-            $response->error = sprintf('Invalid id sent: %s', $id);
+        $id = filter_var(
+            $request->getParam('id'),
+            FILTER_VALIDATE_INT,
+            [
+                'options' => [
+                    'min_range' => 1
+                ]
+            ]
+        );
+
+        if ($id === false) {
+            $response->error = 'Id invalid';
             return new JsonResponse($response, HttpResponse::HTTP_BAD_REQUEST);
         }
 
-        $address = null;
-        foreach ($this->addresses as $turbine) {
-            if ($turbine->getId() === (int)$id) {
-                $address = $turbine->getAddress();
-            }
-        }
-        if (is_null($address)) {
-            $response->error = sprintf('Id %s not found', $id);
+        $turbine = Turbine::get($id);
+        if (is_null($turbine)) {
+            $response->error = sprintf('Id %d not found', $id);
             return new JsonResponse($response, HttpResponse::HTTP_NOT_FOUND);
         }
-        return new JsonResponse($address, HttpResponse::HTTP_OK);
-    }
-
-    function rcd()
-    {
-        $file = fopen('turbines.csv', 'r');
-        $i = 0;
-        while (($line = fgetcsv($file)) !== FALSE) {
-            $turbine = new Turbine();
-            $turbine->setId(++$i);
-            $turbine->setIdentifier($line[0]);
-            $turbine->setProducer($line[1]);
-            $turbine->setLatitude((float)$line[2]);
-            $turbine->setLongitude((float)$line[3]);
-            $this->addresses[] = $turbine;
-        }
-
-        fclose($file);
+        return new JsonResponse($turbine->getAddress(), HttpResponse::HTTP_OK);
     }
 }

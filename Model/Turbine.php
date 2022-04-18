@@ -2,11 +2,15 @@
 
 namespace Model;
 
+use Core\DataModel\Data;
+use Core\DataModel\DataCsv;
 use Core\DataModel\Model;
 
 class Turbine extends Model
 {
     protected static string $table = 'turbines';
+
+    private Data $connection;
 
     private ?int $id;
 
@@ -17,6 +21,11 @@ class Turbine extends Model
     private ?float $latitude;
 
     private ?float $longitude;
+
+    public function __construct()
+    {
+        $this->connection = new DataCsv(self::$table . '.csv', 'r');
+    }
 
     /**
      * @return string|null
@@ -99,6 +108,21 @@ class Turbine extends Model
     }
 
     /**
+     * @return DataCsv|Data
+     */
+    public function getConnection(): DataCsv|Data
+    {
+        return $this->connection;
+    }
+
+    /**
+     * @param DataCsv|Data $connection
+     */
+    public function setConnection(DataCsv|Data $connection): void
+    {
+        $this->connection = $connection;
+    }
+    /**
      * Return the information about the location of the turbine
      * @return array
      */
@@ -109,5 +133,39 @@ class Turbine extends Model
             'latitude' => $this->latitude,
             'longitude' => $this->longitude
         ];
+    }
+
+    /**
+     * @param string $field
+     * @param $value
+     * @return Turbine|null
+     * @throws \Core\DataModel\DataCsvException
+     */
+    public static function find(string $field, $value): ?Turbine
+    {
+        $connection = new DataCsv(self::$table . '.csv', 'r');
+        $result = $connection->find($field, $value);
+
+        if (count($result) > 0) {
+            $turbine = new Turbine();
+            $turbine->setId($result['id']);
+            $turbine->setIdentifier($result['identifier']);
+            $turbine->setProducer($result['producer']);
+            $turbine->setLatitude(floatval($result['latitude']));
+            $turbine->setLongitude(floatval($result['longitude']));
+            return $turbine;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @param int $value
+     * @return Turbine|null
+     * @throws \Core\DataModel\DataCsvException
+     */
+    public static function get(int $value): ?Turbine
+    {
+        return self::find('id', $value);
     }
 }
