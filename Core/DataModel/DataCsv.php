@@ -19,25 +19,11 @@ class DataCsv extends Data implements DataInterface
      */
     public function __construct($filename, $mode)
     {
-        $this->filename = App::$basePath . DIRECTORY_SEPARATOR . $filename;
+        $this->filename = App::$baseCsv . DIRECTORY_SEPARATOR . $filename;
         $this->open($mode);
         $this->loadHeader();
         $this->close();
         $this->file = null;
-    }
-
-    /**
-     * Load values from file
-     * @return void
-     * @throws DataCsvException
-     */
-    private function load(): void
-    {
-        $this->clearHeader();
-
-        while (($line = fgetcsv($this->file)) !== false) {
-            $this->values += $line;
-        }
     }
 
     /**
@@ -82,22 +68,7 @@ class DataCsv extends Data implements DataInterface
     }
 
     /**
-     * @return array
-     */
-    public function getHeader(): array
-    {
-        return $this->header;
-    }
-
-    /**
-     * @return array
-     */
-    public function getValues(): array
-    {
-        return $this->values;
-    }
-
-    /**
+     * Search for a specific value in the data set.
      * @param string $field
      * @param $value
      * @return array|null
@@ -140,9 +111,12 @@ class DataCsv extends Data implements DataInterface
         return $idx;
     }
 
+    /**
+     * Move the file pointer stream to next line, ignoring the header.
+     * @return void
+     */
     private function clearHeader(): void
     {
         fgetcsv($this->file);
     }
-
 }

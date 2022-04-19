@@ -53,6 +53,8 @@ Organizing code is important because allows the developer to easily guess
 where some piece of the application might be place, as the application
 grows.
 
+__in progress__
+
 ```
 - autoload.php - autoload classes for the application 
 - index.php - application entry point

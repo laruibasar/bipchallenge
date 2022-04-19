@@ -7,7 +7,7 @@ use Core\Route\Router;
 
 class App
 {
-    public static string $basePath;
+    public static string $baseCsv;
 
     public static function setup(): void
     {
@@ -19,6 +19,6 @@ class App
         /**
          * Set base path for csv
          */
-        self::$basePath = $_SERVER['DOCUMENT_ROOT'];
+        self::$baseCsv = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'Datasets';
     }
 }
